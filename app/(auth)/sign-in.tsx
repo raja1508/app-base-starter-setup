@@ -1,3 +1,4 @@
+import AuthInput from "@/components/auth/AuthInput";
 import AuthLogo from "@/components/auth/AuthLogo";
 import { useSignIn } from "@clerk/expo";
 import { Link, useRouter, type Href } from "expo-router";
@@ -68,18 +69,19 @@ const SignIn = () => {
           // });
           // posthog.capture('user_signed_in', { email: emailAddress });
 
-          const url = decorateUrl("/(tabs)");
-          if (url.startsWith("http")) {
-            // Only use window.location on web platform
-            if (typeof window !== "undefined" && window.location) {
-              window.location.href = url;
-            } else {
-              // On native, just use router navigation
-              router.replace("/(tabs)" as Href);
-            }
-          } else {
-            router.replace(url as Href);
-          }
+        //   const url = decorateUrl("/(tabs)");
+        //   if (url.startsWith("http")) {
+        //     // Only use window.location on web platform
+        //     if (typeof window !== "undefined" && window.location) {
+        //       window.location.href = url;
+        //     } else {
+        //       // On native, just use router navigation
+        //       router.replace("/(tabs)" as Href);
+        //     }
+        //   } else {
+        //     router.replace(url as Href);
+        //   }
+        router.replace("/(tabs)/" as Href); 
         },
       });
     } else if (signIn.status === "needs_second_factor") {
@@ -171,7 +173,7 @@ const SignIn = () => {
               {/* Verification Form */}
               <View className="auth-card">
                 <View className="auth-form">
-                  <View className="auth-field">
+                  {/* <View className="auth-field">
                     <Text className="auth-label">Verification Code</Text>
                     <TextInput
                       className="auth-input"
@@ -188,8 +190,19 @@ const SignIn = () => {
                         {errors.fields.code.message}
                       </Text>
                     )}
-                  </View>
-
+                  </View> */}
+                  
+                  {/* Verification */}
+                   <AuthInput
+                    label="Verification Code"
+                    value={code}
+                    onChangeText={setCode}
+                    placeholder="Enter 6-digit code"
+                    keyboardType="number-pad"
+                    autoComplete="one-time-code"
+                    maxLength={6}
+                    error={errors.fields.code?.message}
+                    />
                   <Pressable
                     className={`auth-button ${(!code || fetchStatus === "fetching") && "auth-button-disabled"}`}
                     onPress={handleVerify}
@@ -262,7 +275,7 @@ const SignIn = () => {
             {/* Sign-In Form */}
             <View className="auth-card">
               <View className="auth-form">
-                <View className="auth-field">
+                {/* <View className="auth-field">
                   <Text className="auth-label">Email Address</Text>
                   <TextInput
                     className={`auth-input ${emailTouched && !emailValid && "auth-input-error"}`}
@@ -285,9 +298,8 @@ const SignIn = () => {
                       {errors.fields.identifier.message}
                     </Text>
                   )}
-                </View>
-
-                <View className="auth-field">
+                </View> */}
+                {/* <View className="auth-field">
                   <Text className="auth-label">Password</Text>
                   <TextInput
                     className={`auth-input ${passwordTouched && !passwordValid && "auth-input-error"}`}
@@ -307,7 +319,41 @@ const SignIn = () => {
                       {errors.fields.password.message}
                     </Text>
                   )}
-                </View>
+                </View> */}
+
+                {/* Email */}
+                <AuthInput
+                    label="Email Address"
+                    value={emailAddress}
+                    onChangeText={setEmailAddress}
+                    placeholder="name@example.com"
+                    keyboardType="email-address"
+                    autoCapitalize="none"
+                    autoComplete="email"
+                    onBlur={() => setEmailTouched(true)}
+                    hasError={emailTouched && !emailValid}
+                    error={
+                        (emailTouched && !emailValid ? "Please enter a valid email address" : "") ||
+                        errors.fields.identifier?.message
+                    }
+                />
+
+
+                {/* Password */}
+                <AuthInput
+                  label="Password"
+                  value={password}
+                  onChangeText={setPassword}
+                  placeholder="Enter your password"
+                  secureTextEntry
+                  autoComplete="password"
+                  onBlur={() => setPasswordTouched(true)}
+                  hasError={passwordTouched && !passwordValid}
+                  error={
+                    (passwordTouched && !passwordValid ? "Password is required" : "") ||
+                    errors.fields.password?.message
+                  }
+                />
 
                 <Pressable
                   className={`auth-button ${(!formValid || fetchStatus === "fetching") && "auth-button-disabled"}`}
