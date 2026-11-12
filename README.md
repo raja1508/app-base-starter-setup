@@ -228,4 +228,4 @@ _Screenshots coming soon._
 
 ## Author
 
-Built by **[Your Name]**. Every day is a learning day.
+Built by **Raja**. Every day is a learning day.
